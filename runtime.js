@@ -21,7 +21,7 @@ export async function resolveRendererPython(engine, config={}) {
     if(!entry || typeof entry.python!=='string'||typeof entry.envRoot!=='string') throw new Error('engine not configured');
     const root=path.join(manifest.envRoot,engine);
     if(entry.envRoot!==root||entry.python!==path.join(root,process.platform==='win32'?'Scripts':'bin',process.platform==='win32'?'python.exe':'python')) throw new Error('engine path mismatch');
-    if(await realpath(root)!==root) throw new Error('runtime environment must not be redirected');
+    if(await realpath(root)!==root || await realpath(path.dirname(entry.python))!==path.dirname(entry.python)) throw new Error('runtime environment must not be redirected');
     return entry.python;
   } catch(error) {
     throw new Error(`Python renderer ${engine} is not configured (${error.message}). Run node scripts/doctor.mjs, then authorize node scripts/setup-python.mjs --engine ${engine}; or configure ${engine==='manim'?'manimPython':'python'} explicitly. Never modify DSH bundled Python.`);
