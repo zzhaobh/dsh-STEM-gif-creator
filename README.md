@@ -30,7 +30,7 @@ See [environment details](docs/environment.md). Python sources/requirements trav
 
 - Native workbench with explicit session selection, source/storyboard editing, static/GIF previews and downloads.
 - `gif_creator` tool and `/gif-creator <JSON>` command share session-authorized operations and CAS revisions.
-- `plan {brief}` gives a STEM authoring checklist; the receiving Agent drafts/selects representations, not an internal hidden model.
+- `plan {brief}` gives a STEM authoring checklist and native `motionPlan`: visual thesis, stable anchors/entity identities, explicit event timeline, one relation per GIF, small first render and decoded verification. See [Manim authoring contract](docs/manim-authoring.md). This absorbs the technical-explainer approach into the plugin without vendoring external skill code or allowing generated Python execution; the receiving Agent drafts/selects representations, not an internal hidden model.
 - `compile {draft:{language,code,title,summary,durationSeconds}}` converts safe subsets of Mermaid flowchart, PlantUML rectangle/arrow, flat D2 node/arrow and inline Vega v5 line/bar into reviewable storyboards. Includes/URLs/signals/code are not evaluated. Unknown syntax fails; layout direction/style is not preserved and warned. Full DSL grammars and sequence/group imports are not supported.
 - Flow, cause, compare, hierarchy, line/bar charts (Matplotlib/Celluloid); fixed full-dataset axes, exact values/units and source excerpts.
 - Native Manim Spark reduceByKey story: labeled data blocks, local combining, moving shuffle packets, final totals,8s loop/final2s hold. `sketch` currently has no effect.

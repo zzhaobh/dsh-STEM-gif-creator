@@ -27,4 +27,5 @@ test('Vega rejects field paths/non-string fields and line band semantics',()=>{
  const s=spec();s.marks[0].type='line';delete s.marks[0].encode.update.y2;delete s.marks[0].encode.update.width;assert.throws(()=>compileDsl(draft('vega',JSON.stringify(s))),/point scale/);s.scales[0].type='point';assert.equal(compileDsl(draft('vega',JSON.stringify(s))).storyboard.scenes[0].chart.type,'line');
 });
 test('creation entry rejects getter without invocation',()=>{let count=0;const request={brief:'x'};Object.defineProperty(request,'action',{enumerable:true,get(){count++;return 'plan';}});assert.throws(()=>prepareCreation(request),/data property/);assert.equal(count,0);});
+test('plan includes native Manim authoring contract without arbitrary Python execution',()=>{const p=planDsl('解释 VLA 同步');assert.equal(p.motionPlan.guide,'docs/manim-authoring.md');assert.ok(p.motionPlan.requiredFields.includes('verificationInvariants'));assert.deepEqual(p.motionPlan.defaultDeliverables,['GIF','static overview','decoded metrics']);assert.match(p.motionPlan.backendPolicy,/Do not execute generated Python/);assert.match(p.motionPlan.scope,/not yet/);});
 export {spec};

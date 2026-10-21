@@ -1,6 +1,6 @@
 # VLA 技术博客 GIF 分镜：同步 → 取窗 → 组样本
 
-> **状态：设计提案，尚未渲染／视觉验收。** 只新增本设计文件，不更改 schema、renderer、客户端或存储契约。依据：[统一视觉规范](<visual-vocabulary.md>)、本次用户对参考图的概念说明；不是截图逐字 OCR，不是用户真实数据集或训练配置。
+> **状态：三段原生 Manim 视觉原型已渲染，尚未完成插件契约集成／用户视觉验收。** 原型见 [vla_prototype.py](<../renderer/vla_prototype.py>)；schema、Host 和客户端仍不接受 VLA 模板。依据：[统一视觉规范](<visual-vocabulary.md>)、本次用户对参考图的概念说明；不是截图逐字 OCR，不是用户真实数据集或训练配置。
 
 ## 1. 视觉论点与范围
 
