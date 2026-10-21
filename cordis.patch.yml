@@ -1,0 +1,5 @@
+- insert:
+    - id: dsh-stem-gif-creator
+      name: dsh-stem-gif-creator
+      config:
+        animationEngine: matplotlib

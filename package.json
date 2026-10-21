@@ -1,0 +1,18 @@
+{
+  "name": "dsh-stem-gif-creator",
+  "version": "0.1.0",
+  "description": "Show the insight with GIF. Source-grounded animated STEM explanations for DeepSeek Harness.",
+  "license": "MIT",
+  "author": "zzhaobh",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "repository": { "type": "git", "url": "git+ssh://git@github.com/zzhaobh/dsh-STEM-gif-creator.git" },
+  "homepage": "https://github.com/zzhaobh/dsh-STEM-gif-creator",
+  "bugs": "https://github.com/zzhaobh/dsh-STEM-gif-creator/issues",
+  "keywords": ["dsh", "stem", "gif", "manim", "deepseek", "animation", "education"],
+  "exports": { ".": "./index.js", "./client": "./client.js", "./locale/*.json": "./locale/*.json", "./icon": "./icon.svg" },
+  "files": ["index.js", "runtime.js", "operations.js", "schema.js", "dsl.js", "client.js", "cordis.patch.yml", "locale/*.json", "icon.svg", "renderer/*.py", "renderer/requirements*.txt", "scripts/*.mjs", "examples/*.json", "docs/*.md", "README.md", "INSTALL_FOR_AI.md", "LICENSE"],
+  "scripts": { "test": "node --test tests/*.test.js", "doctor": "node scripts/doctor.mjs", "setup:python": "node scripts/setup-python.mjs" },
+  "devDependencies": { "ajv": "8.20.0" },
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" }, "client": { "platform": "web", "immediately": true, "inject": ["@deepseek-ai/dsh-client-ui-workspace", "@deepseek-ai/dsh-client-ui-conversation"] } }
+}

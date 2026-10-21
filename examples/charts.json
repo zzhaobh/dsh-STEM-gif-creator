@@ -1,0 +1,55 @@
+{
+  "title": "温度报警的条件与数据趋势",
+  "source": "合成示例数据，仅用于展示图表，不是真实巡检记录。温度超过 80°C 才报警，低于阈值不报警；采样间隔为 2 秒。示意巡检记录：第一周 120 人次，第二周 150 人次，第三周 135 人次，第四周 180 人次。单位为人次，数据为四周合成示例。",
+  "scenes": [
+    {
+      "id": "threshold",
+      "layout": "cause",
+      "title": "先采样，再判断阈值",
+      "summary": "只有超过 80°C 才报警；低于阈值不报警。",
+      "durationSeconds": 5,
+      "evidence": ["温度超过 80°C 才报警，低于阈值不报警；采样间隔为 2 秒。"],
+      "nodes": [
+        {"id": "sample", "label": "温度采样", "detail": "每 2 秒读取一次"},
+        {"id": "check", "label": "检查条件", "detail": "判断温度是否超过 80°C"},
+        {"id": "alarm", "label": "触发报警", "detail": "超过阈值才报警"}
+      ],
+      "edges": [
+        {"from": "sample", "to": "check", "label": "读取数值"},
+        {"from": "check", "to": "alarm", "label": "超过 80°C"}
+      ]
+    },
+    {
+      "id": "negative",
+      "layout": "compare",
+      "title": "超过与低于的结果不同",
+      "summary": "同一个阈值产生两种结果，负面条件不能被省略。",
+      "durationSeconds": 4,
+      "evidence": ["低于阈值不报警"],
+      "nodes": [
+        {"id": "above", "label": "超过 80°C", "detail": "触发报警"},
+        {"id": "below", "label": "低于阈值", "detail": "不报警"}
+      ],
+      "edges": []
+    },
+    {
+      "id": "inspection",
+      "layout": "chart",
+      "title": "四周巡检登记人次",
+      "summary": "巡检登记从第一周的 120 人次增至第四周的 180 人次，合成数据用于示意。",
+      "durationSeconds": 6,
+      "evidence": ["第一周 120 人次，第二周 150 人次，第三周 135 人次，第四周 180 人次。单位为人次"],
+      "nodes": [],
+      "edges": [],
+      "chart": {
+        "type": "bar",
+        "xLabel": "巡检周次",
+        "yLabel": "巡检登记人次",
+        "yUnit": "人次",
+        "baseline": 0,
+        "categories": ["第一周", "第二周", "第三周", "第四周"],
+        "series": [{"id": "inspections", "label": "巡检登记人次", "values": [120, 150, 135, 180]}]
+      }
+    }
+  ]
+}

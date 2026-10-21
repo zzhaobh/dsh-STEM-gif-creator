@@ -1,0 +1,36 @@
+{
+  "title": "温度报警的条件与边界",
+  "source": "只有温度超过 80°C 才报警，低于阈值不报警；采样间隔为 2 秒。",
+  "scenes": [
+    {
+      "id": "threshold",
+      "layout": "cause",
+      "title": "先采样，再判断阈值",
+      "summary": "只有超过 80°C 才报警；低于阈值不报警。",
+      "durationSeconds": 5,
+      "evidence": ["只有温度超过 80°C 才报警，低于阈值不报警"],
+      "nodes": [
+        {"id": "sample", "label": "温度采样", "detail": "每 2 秒读取一次"},
+        {"id": "check", "label": "检查条件", "detail": "判断温度是否超过 80°C"},
+        {"id": "alarm", "label": "触发报警", "detail": "超过阈值才报警"}
+      ],
+      "edges": [
+        {"from": "sample", "to": "check", "label": "读取数值"},
+        {"from": "check", "to": "alarm", "label": "超过 80°C"}
+      ]
+    },
+    {
+      "id": "negative",
+      "layout": "compare",
+      "title": "超过与低于的结果不同",
+      "summary": "同一个阈值产生两种结果，负面条件不能被省略。",
+      "durationSeconds": 4,
+      "evidence": ["低于阈值不报警"],
+      "nodes": [
+        {"id": "above", "label": "超过 80°C", "detail": "触发报警"},
+        {"id": "below", "label": "低于阈值", "detail": "不报警"}
+      ],
+      "edges": []
+    }
+  ]
+}

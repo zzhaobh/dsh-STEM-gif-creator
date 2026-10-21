@@ -1,0 +1,15 @@
+{
+  "title": "Spark：同一个 key 如何汇合？",
+  "source": "合成示意 · 非真实集群运行。输入 P0=[spark,data,spark]，P1=[ai,data]。map 将单词变为 (key,1)，reduceByKey 先本地合并，再将同 key 的局部结果发送到同一目标分区，最后合并。目标分区为示意分配，不代表 Spark 实际 hash 值；已有匹配 partitioner 时并非总需要新的 shuffle。reduceByKey 是分布式按 key 转换，不是返回 driver 单个结果的 reduce action。参考 Apache Spark 官方 RDD Programming Guide：https://spark.apache.org/docs/latest/rdd-programming-guide.html#transformations 和 https://spark.apache.org/docs/latest/rdd-programming-guide.html#shuffle-operations 。",
+  "scenes": [{
+    "id": "spark-aggregation",
+    "layout": "technical",
+    "title": "Spark：同一个 key 如何汇合？",
+    "summary": "map → 本地合并 → shuffle → reduceByKey",
+    "durationSeconds": 8,
+    "evidence": ["合成示意 · 非真实集群运行", "reduceByKey 先本地合并，再将同 key 的局部结果发送到同一目标分区，最后合并"],
+    "nodes": [],
+    "edges": [],
+    "technical": {"template": "spark_reduce_by_key", "partitions": [["spark", "data", "spark"], ["ai", "data"]], "finalHoldSeconds": 2, "sketch": false}
+  }]
+}

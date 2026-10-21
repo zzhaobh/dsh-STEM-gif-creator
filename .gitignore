@@ -1,0 +1,11 @@
+node_modules/
+.venv*/
+__pycache__/
+*.pyc
+.gif-creator/
+verification/
+output/
+runtime.json
+runtime-*.tmp
+.env
+*.tgz

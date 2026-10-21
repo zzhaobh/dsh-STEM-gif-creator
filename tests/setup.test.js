@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {installPlan,parseOptions,environmentPython,acquireSetupLock} from '../scripts/setup-python.mjs';
+import {runtimeHome,resolveRendererPython,environmentHelp} from '../runtime.js';
+test('setup explicitly selects engines, rejects unknown options and supports dry run',()=>{assert.deepEqual(parseOptions(['--engine','all','--dry-run']),{engine:'all',dryRun:true});assert.throws(()=>parseOptions(['--sudo']));assert.throws(()=>parseOptions(['--engine','anything']));});
+test('setup isolates engines and uses fixed requirements without a shell',()=>{const p=installPlan({engine:'all',home:'/cache',uv:true});assert.equal(p.length,2);assert.equal(p[0].envRoot,'/cache/charts');assert.equal(p[1].envRoot,'/cache/manim');assert.deepEqual(p[0].commands[0],['uv','venv','--python','3.12','/cache/charts']);assert.ok(p[1].commands[1].at(-1).endsWith('requirements-manim.txt'));});
+test('platform paths use Windows Scripts/python.exe and Unix bin/python',()=>{assert.ok(environmentPython('/cache','charts','win32').endsWith('Scripts/python.exe'));assert.ok(environmentPython('/cache','charts','linux').endsWith('bin/python'));assert.equal(runtimeHome({DSH_STEM_GIF_HOME:'/cache'}),'/cache');});
+test('explicit configured interpreters override discovery',async()=>{assert.equal(await resolveRendererPython('charts',{python:'/custom/python'}),'/custom/python');assert.equal(await resolveRendererPython('manim',{manimPython:'/custom/manim'}),'/custom/manim');});
+test('setup lock rejects concurrent writers and releases cleanly',async()=>{const home=await fs.mkdtemp(path.join(os.tmpdir(),'stem-lock-'));const release=await acquireSetupLock(home);try{await assert.rejects(()=>acquireSetupLock(home),/busy/);}finally{await release();}const second=await acquireSetupLock(home);await second();await fs.rmdir(home);});
+test('AI environment help requires permission and no postinstall',()=>{const r=environmentHelp();assert.ok(r.steps.some(s=>s.includes('permission')));assert.ok(r.constraints.some(s=>s.includes('postinstall')));});
