@@ -30,11 +30,28 @@ See [environment details](docs/environment.md). Python sources/requirements trav
 
 - Native workbench with explicit session selection, source/storyboard editing, static/GIF previews and downloads.
 - `gif_creator` tool and `/gif-creator <JSON>` command share session-authorized operations and CAS revisions.
-- `plan {brief}` gives a STEM authoring checklist and native `motionPlan`: visual thesis, stable anchors/entity identities, explicit event timeline, one relation per GIF, small first render and decoded verification. See [Manim authoring contract](docs/manim-authoring.md). This absorbs the technical-explainer approach into the plugin without vendoring external skill code or allowing generated Python execution; the receiving Agent drafts/selects representations, not an internal hidden model.
+- `plan {brief}` returns a relation-first STEM design guide (`relationshipPlan`): the system's temporal, spatial, ownership, dependency, quantitative, state and feedback relations; relational layout alternatives; evidence-bound displacement, shape, size, coordinated-movement and coordinated-value techniques; a visual encoding system and a stable design system (roles, states, tokens, accessibility). It also returns `motionPlan` with visual thesis, anchors, event timeline and decoded verification. See [Manim authoring contract](docs/manim-authoring.md). This absorbs the technical-explainer approach into the plugin without vendoring external skill code or allowing generated Python execution; the receiving Agent drafts/selects representations, not an internal hidden model.
 - `compile {draft:{language,code,title,summary,durationSeconds}}` converts safe subsets of Mermaid flowchart, PlantUML rectangle/arrow, flat D2 node/arrow and inline Vega v5 line/bar into reviewable storyboards. Includes/URLs/signals/code are not evaluated. Unknown syntax fails; layout direction/style is not preserved and warned. Full DSL grammars and sequence/group imports are not supported.
 - Flow, cause, compare, hierarchy, line/bar charts (Matplotlib/Celluloid); fixed full-dataset axes, exact values/units and source excerpts.
 - Native Manim Spark reduceByKey story: labeled data blocks, local combining, moving shuffle packets, final totals,8s loop/final2s hold. `sketch` currently has no effect.
 - Unified [visual vocabulary](docs/visual-vocabulary.md): stable anchors, concrete moving entities, one focus group, short annotations. General hybrid/multiview synchronization is a design direction, not implemented capability.
+
+## Relation-first authoring and design audit
+
+`plan {brief}` now starts from the whole system across time, space, ownership, dependency, quantity, state and feedback—not a single DSL topology. It provides relational layout alternatives and evidence-bound techniques for displacement, shape/size transformation, coordinated movement and coordinated value updates. One focus may span several linked tracks. Prefer one coherent canvas; split only for independent questions or verified legibility limits.
+
+`audit {design}` is a receiving-session read-only design lint. `design` has entities `{id,role}`, relations `{id,from,to,kind}`, views `{id,axis}`, events `{id,action,entity,participants,fromView,toView,sourceRemains,reason}` and clips `{id,relationIds}`. It flags move ghosts, invalid/unjustified copies, reference consumption, missing declared shared axes, redundant relation coverage and isolated entities. Limits:24 entities/events,32 relations,8 views/clips. It does not verify scientific semantics, numerical conservation, actual event timing or rendered geometry.
+
+Capability tiers: generic graph/chart imports produce **fixed static layouts with progressive emphasis**; Spark is a fixed native entity-motion template; design audit does not render arbitrary relational layouts. Aligned multitrack/matrix/nested/feedback/hybrid animation still needs bounded template implementation. One project exports one concatenated GIF plus static scene posters, not separate GIFs per scene. Do not flatten a complex relation design silently into linear cards.
+
+### Visual encoding and design system
+
+The plan also carries two explicit contracts that keep rich layouts readable:
+
+- **Visual encoding system**: each channel (position, length/area, color, shape, size, opacity/line weight, motion, text/formula) declares whether it means identity, state, focus or measurement, with a legend requirement and a guard. Quantitative channels need source values, units, baseline and domain; focus size changes are not value changes; critical distinctions use at least two channels.
+- **Design system**: one visual grammar per role (record, batch, tensor, container, queue, stack, operator, merge, route, transfer, boundary, timeline, window, pointer, annotation), fixed tokens per role, reserved error red, stable anchors, canonical entity IDs across projections and scenes, and accessibility checks for contrast, grayscale and the static final hold.
+
+These are authoring contracts returned by `plan`, not renderer features. The current renderers still need bounded template work to draw arbitrary relational layouts.
 
 ## STEM accuracy
 
