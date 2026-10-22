@@ -17,10 +17,39 @@ function exact(value, keys, at) {
 function allowed(value, keys, at) {
   if (!value || Object.getPrototypeOf(value)!==Object.prototype || Object.keys(value).some(k=>!keys.includes(k))) throw new TypeError(`${at}: unsupported properties`);
 }
+function intakePlan(brief) {
+  const numeric=/统计|分布|曲线|指标|数据点|statistic|chart|metric/i.test(brief);
+  const spark=/spark|shuffle|reducebykey|reduce_by_key|集群|分布式/i.test(brief);
+  const graph=/流程|关系|架构|因果|拓扑|状态机|flow|architecture|graph|pipeline/i.test(brief);
+  const rec=(label,description)=>({label:`${label}（推荐）`,description});
+  const representation=spark
+    ? {base:'机制动画 · Spark 模板',...rec('机制动画 · Spark 模板','当前唯一内置实体运动模板，仅 reduceByKey')}
+    : numeric ? {base:'数据图表',...rec('数据图表','固定坐标轴、真实数据与单位（Vega/Matplotlib）')}
+    : {base:'关系图 · 静态推进',...rec('关系图 · 静态推进','Mermaid/PlantUML/D2 安全子集，固定布局+逐步强调')};
+  const alternatives=[
+    {label:'数据图表',description:'固定坐标轴、真实数据与单位（Vega/Matplotlib）'},
+    {label:'关系图 · 静态推进',description:'Mermaid/PlantUML/D2 安全子集，固定布局+逐步强调'},
+    {label:'机制动画 · Spark 模板',description:'当前唯一内置实体运动模板，仅 reduceByKey'},
+    {label:'先出静态总览图',description:'再决定是否动画'},
+  ].filter(option=>option.label!==representation.base);
+  const domain=numeric?'统计学习':spark?'分布式系统':graph?'系统设计':'深度学习';
+  return {
+    note:'Ask at most three bounded questions before authoring; skip anything the user already answered and proceed with these recommended defaults when the user accepts them.',
+    questions:[
+      {id:'domain',header:'领域',question:'这个 GIF 属于哪个主题？',multiSelect:false,options:[{label:`${domain}（按 brief 推荐）`,description:'来自当前 brief 的关键词推断，可改选'},{label:'深度学习',description:'张量、注意力、训练机制'},{label:'统计学习',description:'抽样、估计、不确定性'},{label:'分布式系统',description:'shuffle、复制、故障'},{label:'系统设计',description:'缓存、队列、请求路径'},{label:'其他（请补充一句）',description:'自由主题，仍按关系优先流程设计'}]},
+      {id:'representation',header:'表现形式',question:'先做哪种输出？',multiSelect:false,options:[representation,...alternatives]},
+      {id:'format',header:'时长与配色',question:'GIF 时长和配色选哪个？',multiSelect:false,options:[{label:'8 秒 · 浅色（推荐）',description:'5–10s 叙事，末停 1–2s'},{label:'5 秒 · 浅色',description:'更短的单一关系'},{label:'10 秒 · 浅色',description:'两段式，但仅一个关系'},{label:'8 秒 · 深色',description:'深色画布，同长度'}]},
+      {id:'evidence',header:'证据来源',question:'内容依据从哪来？',multiSelect:false,options:[{label:'用户提供的原文或数据（推荐）',description:'引用精确片段与数值，不补造数字'},{label:'公开资料（需标注来源）',description:'给出链接与引用，区分测量/计算/示意'},{label:'纯合成示意',description:'明确标注 synthetic，不伪装真实结果'}]},
+    ],
+    defaults:{domain,representation:representation.base,format:'8 秒 · 浅色',evidence:'用户提供的原文或数据'},
+    rules:['最多问三个问题，只保留与本次 brief 相关的问题；每个问题 2–6 个选项，推荐项放第一。','已由用户明确的内容不要重复问；用户说“用推荐”时直接采用 defaults。','优先用 DSH 的选择题工具（ask_user_question），多选仅在确实需要多个值时开启；没有该工具时在对话中给编号选项。','只有用户选择“其他/自填”时才请求一句补充，不要改成开放式长问卷。'],
+  };
+}
 export function planDsl(brief) {
   if(typeof brief!=='string'||!brief.trim()||Buffer.byteLength(brief)>8192) throw new TypeError('brief: nonblank text <=8 KiB required');
   const numeric=/统计|分布|曲线|指标|数据点|statistic|chart|metric/i.test(brief);
   return {status:'planned',author:'receiving_agent',recommendedLanguages:numeric?['vega','mermaid']:['d2','mermaid','plantuml'],
+    intake:intakePlan(brief),
     relationshipPlan:relationshipPolicy,
     checklist:['Define the whole system and its relations before choosing frames or splitting GIFs.','Define the reader question, input, one key change and outcome.','Draft one or two DSL candidates; compare information coverage, not decoration.','Keep containers/axes fixed; use labeled entities for movement, paths only as background.','Use one persistent relational canvas with synchronized tracks; one focus group may span many views. Split only for independent questions or verified legibility limits.','Preserve source data, units, conditions and uncertainty; disclose synthetic examples.','STEM: state tensor dimensions, coordinate scales and units; distinguish measurement, calculation and illustration.','Check conservation, dimensional compatibility and statistical meaning; correlation is not causation, acknowledgements are not commits.','Compile a supported subset; review warnings before create/render.'],
     motionPlan:{guide:'docs/manim-authoring.md',visualThesis:'Write one source-grounded sentence stating the relation that motion will reveal.',sceneContract:'A 5–10 second GIF explains one coherent system question using its related entities together. Prefer one persistent relational layout; split only after relation coverage and legibility review, never one GIF per entity or arrow.',requiredFields:['readerQuestion','sourceEvidence','stableAnchors','entityIdentities','eventTimeline','whatChanges','whatRemainsFixed','finalConclusion','verificationInvariants'],process:['Inspect evidence and choose a supported representation.','Sketch the smallest native scene with readable labels and one focal event.','Render and inspect active-event and final frames before polishing.','Verify decoded duration, final 1–2 second hold, entity conservation and declared meanings.'],defaultDeliverables:['GIF','static overview','decoded metrics'],backendPolicy:'Use a validated built-in technical template for concrete Manim entity motion. Do not execute generated Python or raw Manim code through the tool.',scope:'Spark template is integrated; VLA prototype is not yet a supported tool template. MP4/social-video assembly is not the default.'},

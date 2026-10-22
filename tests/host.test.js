@@ -10,13 +10,15 @@ test('Host exposes supported wire schema without relaxing authoritative validato
   // Optional integration against the real DSH schema validator is separate from this portable structural test.
   assert.doesNotThrow(()=>JSON.stringify(mod.toolParameters));
 });
-test('Host binds tools and command to exact receiving agent and denies read-only writes',async()=>{
+test('Host binds the tool to the exact receiving agent through the bundled skill entry',async()=>{
   assert.equal(typeof mod.apply,'function');
-  let tool,command; const calls=[];
-  const ctx={tools:{register(x){tool=x;}},commands:{register(x){command=x;}},workingDirectory:{ensure:async()=>'/tmp'},fs:{processPathFromHostPath:x=>x},sandboxPolicy:{resolve:()=>({mode:'read-only',workspaceRoot:'/tmp'})},subprocess:{}};
+  let tool,provider; const calls=[];
+  const ctx={tools:{register(x){tool=x;}},skills:{registerProvider(create){provider=create({signal:new AbortController().signal});}},workingDirectory:{ensure:async()=>'/tmp'},fs:{processPathFromHostPath:x=>x},sandboxPolicy:{resolve:()=>({mode:'read-only',workspaceRoot:'/tmp'})},subprocess:{}};
   ctx.effect=fn=>fn();
   mod.apply(ctx,{},{operations:{run:async(...args)=>{calls.push(args);return []}}});
-  assert.equal(tool.name,'gif_creator'); assert.equal(command.name,'gif-creator');
+  assert.equal(tool.name,'gif_creator'); assert.equal(provider.name,'gif-creator');
+  const candidates=await provider.list(); assert.equal(candidates.length,1); assert.equal(candidates[0].name,'stem-gif-creator');
+  const skill=await provider.get(candidates[0]); assert.match(skill.content,/gif_creator \{action:"plan"/); assert.match(skill.content,/entry is this skill/);
   let getterCalls=0;const inherited=Object.create({get action(){getterCalls++;return 'create';}});
   await assert.rejects(()=>tool.execute(inherited,{agent:{session:{id:'s'}}}),/plain JSON/);assert.equal(getterCalls,0);
   const plan=await tool.execute({action:'plan',brief:'统计学习'},{agent:{session:{id:'s'}}});assert.equal(plan.author,'receiving_agent');assert.equal(calls.length,0);
@@ -26,9 +28,6 @@ test('Host binds tools and command to exact receiving agent and denies read-only
   assert.equal(calls[0][0],'s');
   ctx.sandboxPolicy.resolve=()=>({mode:'workspace-write',workspaceRoot:process.cwd()});
   await assert.rejects(()=>tool.execute({action:'create'},{agent:{session:{id:'s'}},signal:new AbortController().signal}),/workspace-write boundary/);
-  ctx.sandboxPolicy.resolve=()=>({mode:'read-only',workspaceRoot:'/tmp'});
-  const result=await command.handler({agent:{session:{id:'s'}},rawInput:' {"action":"list"}',signal:new AbortController().signal});
-  assert.equal(result.kind,'success');assert.deepEqual(JSON.parse(result.text),[]);
 });
 test('Managed renderer uses bounded batch stdin, no shell and checks exit',async()=>{
   assert.equal(typeof mod.createManagedRenderer,'function');

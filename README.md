@@ -22,15 +22,15 @@ Manual route:
 2. Ask DSH to install that absolute directory using `plugin_manager` (`install_bundle`). Do not edit the profile's package/patch manually.
 3. Run `node scripts/doctor.mjs` and `node scripts/setup-python.mjs --engine all --dry-run` from the package directory.
 4. After authorization, set up native prerequisites if necessary, then `node scripts/setup-python.mjs --engine charts|manim|all`.
-5. Run doctor and a real render. Verify the installation result and workbench independently.
+5. Run doctor and a real render. Verify the installation result, the `stem-gif-creator` skill entry and the `gif_creator` tool independently.
 
 See [environment details](docs/environment.md). Python sources/requirements travel with the bundle; venvs, wheels and fonts do not. The helper discovers OS paths and prefers uv+ordinary CPython3.12; never modifies DSH bundled Python. There is no automatic postinstall. Windows native setup is experimental; native evidence is macOS only.
 
 ## Capabilities
 
-- Native workbench with explicit session selection, source/storyboard editing, static/GIF previews and downloads.
-- `gif_creator` tool and `/gif-creator <JSON>` command share session-authorized operations and CAS revisions.
-- `plan {brief}` returns a relation-first STEM design guide (`relationshipPlan`): the system's temporal, spatial, ownership, dependency, quantitative, state and feedback relations; relational layout alternatives; evidence-bound displacement, shape, size, coordinated-movement and coordinated-value techniques; a visual encoding system and a stable design system (roles, states, tokens, accessibility). It also returns `motionPlan` with visual thesis, anchors, event timeline and decoded verification. See [Manim authoring contract](docs/manim-authoring.md). This absorbs the technical-explainer approach into the plugin without vendoring external skill code or allowing generated Python execution; the receiving Agent drafts/selects representations, not an internal hidden model.
+- **One entry: the bundled `stem-gif-creator` skill.** There is no Web UI, workbench panel, icon or client bundle. The skill teaches the Agent the environment check, relation-first design, audit, storyboard authoring, render and decoded verification, then drives the `gif_creator` Host tool.
+- `gif_creator` Host tool with session-authorized operations and CAS revisions (the backend primitive behind the skill).
+- `plan {brief}` returns `intake` multiple-choice choices (domain, representation, duration/theme, evidence source) so user customization is selected from bounded options instead of typed as an essay, plus a relation-first STEM design guide (`relationshipPlan`): the system's temporal, spatial, ownership, dependency, quantitative, state and feedback relations; relational layout alternatives; evidence-bound displacement, shape, size, coordinated-movement and coordinated-value techniques; a visual encoding system and a stable design system (roles, states, tokens, accessibility). It also returns `motionPlan` with visual thesis, anchors, event timeline and decoded verification. See [Manim authoring contract](docs/manim-authoring.md). This absorbs the technical-explainer approach into the plugin without vendoring external skill code or allowing generated Python execution; the receiving Agent drafts/selects representations, not an internal hidden model.
 - `compile {draft:{language,code,title,summary,durationSeconds}}` converts safe subsets of Mermaid flowchart, PlantUML rectangle/arrow, flat D2 node/arrow and inline Vega v5 line/bar into reviewable storyboards. Includes/URLs/signals/code are not evaluated. Unknown syntax fails; layout direction/style is not preserved and warned. Full DSL grammars and sequence/group imports are not supported.
 - Flow, cause, compare, hierarchy, line/bar charts (Matplotlib/Celluloid); fixed full-dataset axes, exact values/units and source excerpts.
 - Native Manim Spark reduceByKey story: labeled data blocks, local combining, moving shuffle packets, final totals,8s loop/final2s hold. `sketch` currently has no effect.
@@ -59,7 +59,7 @@ Preserve measurements, units, tensor dimensions, negations and conditions. Disti
 
 ## Tool actions
 
-`environment`, `plan`, `compile` are read-only helpers. `create {storyboard}`, `list`, `get {id}`, `update {id,expectedRevision,storyboard}`, `render {id,expectedRevision,theme}`, `media {id,expectedRevision,kind,sceneIndex?}` use receiving-session storage. Scene indices are zero-based. Only generated UUIDs are accepted; no arbitrary output paths or session IDs.
+The Agent-facing entry is the bundled skill; the tool is its backend. `environment`, `plan`, `audit`, `compile` are read-only helpers. `create {storyboard}`, `list`, `get {id}`, `update {id,expectedRevision,storyboard}`, `render {id,expectedRevision,theme}`, `media {id,expectedRevision,kind,sceneIndex?}` use receiving-session storage. Scene indices are zero-based. Only generated UUIDs are accepted; no arbitrary output paths or session IDs. There is no slash command and no Web UI.
 
 Config: optional `python`, `manimPython` interpreter paths; `animationEngine` is matplotlib(default) or celluloid. Without explicit interpreters the plugin discovers isolated environments through the cache manifest.
 
@@ -71,10 +71,10 @@ npm test
 node scripts/setup-python.mjs --engine all --dry-run
 ```
 
-Enable actual render integration by setting `GIF_CREATOR_TEST_PYTHON` for chart/diagram Python and `GIF_CREATOR_MANIM_PYTHON` for Manim. Run each Python suite in its matching environment; install an appropriate CJK font. Tests of Node mocks/imports do not prove live DSH UI activation. Current local DSH hot-reload activation hit a root-Include loader error; cold-start/live GUI activation remains unverified. This alpha is published with that limitation, not claimed production-ready.
+Enable actual render integration by setting `GIF_CREATOR_TEST_PYTHON` for chart/diagram Python and `GIF_CREATOR_MANIM_PYTHON` for Manim. Run each Python suite in its matching environment; install an appropriate CJK font. Tests of Node mocks/imports do not prove live DSH activation. Current local DSH hot-reload activation hit a root-Include loader error; cold-start/live activation remains unverified. This alpha is published with that limitation, not claimed production-ready.
 
 ## Safety and licensing
 
-Fixed renderer scripts, bounded inputs/media, atomic publication, session-scoped CAS, no-follow checks and managed cancellation. Shared local filesystem only; not an OS-level sandbox against hostile local processes. Media files<=16MiB; a frame sequence may use hundreds of MiB RAM. Python/native dependencies retain their own licenses; system fonts are not redistributed. Original source, icon and synthetic example media are MIT.
+Fixed renderer scripts, bounded inputs/media, atomic publication, session-scoped CAS, no-follow checks and managed cancellation. Shared local filesystem only; not an OS-level sandbox against hostile local processes. Media files<=16MiB; a frame sequence may use hundreds of MiB RAM. Python/native dependencies retain their own licenses; system fonts are not redistributed. Original source and synthetic example media are MIT.
 
 [![](https://img.shields.io/badge/powered_by-dsh-4D6BFE?style=flat-square&logo=deepseek&logoColor=white)](https://github.com/deepseek-ai/deepseek-harness)

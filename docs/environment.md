@@ -37,4 +37,4 @@ Diagram font search includes installed Apple, Linux Noto/WenQuanYi and Windows Y
 
 `node scripts/doctor.mjs` returns per-engine import status and exits1 if any engine is missing. A partial charts-only installation can still render diagrams/charts. For native tests, supply the appropriate interpreters via `GIF_CREATOR_TEST_PYTHON` and `GIF_CREATOR_MANIM_PYTHON`. For Python Manim tests set `MANIM_RENDER_TEST=1`. Do not run chart native tests with a Manim-only venv and then claim chart dependencies are broken.
 
-Current native evidence is macOS only. Cross-platform path/plan logic can be unit-tested, but does not certify Linux/Windows toolchain installation or GUI activation.
+Current native evidence is macOS only. Cross-platform path/plan logic can be unit-tested, but does not certify Linux/Windows toolchain installation or live DSH activation.

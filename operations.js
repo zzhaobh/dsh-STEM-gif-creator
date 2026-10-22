@@ -96,7 +96,7 @@ function parseJSON(buffer, label) {
 }
 
 /**
- * Shared tool/command operation. Host must authorize sessionId and supply its cwd.
+ * Shared tool operation. Host must authorize sessionId and supply its cwd.
  * IO is a complete fs/promises-compatible adapter (including no-follow open flags
  * and FileHandle stat/read/writeFile/sync/close; nonrecursive rmdir is required),
  * not an authority-bearing service. render({storyboard, outputDir, theme, signal})
