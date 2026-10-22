@@ -33,10 +33,14 @@ function intakePlan(brief) {
     {label:'先出静态总览图',description:'再决定是否动画'},
   ].filter(option=>option.label!==representation.base);
   const domain=numeric?'统计学习':spark?'分布式系统':graph?'系统设计':'深度学习';
+  const domainNotes={'深度学习':'张量、注意力、训练机制','统计学习':'抽样、估计、不确定性','分布式系统':'shuffle、复制、故障','系统设计':'缓存、队列、请求路径'};
+  const domainOptions=[{label:`${domain}（按 brief 推荐）`,description:'来自当前 brief 的关键词推断，可改选'},
+    ...Object.entries(domainNotes).filter(([name])=>name!==domain).map(([name,description])=>({label:name,description})),
+    {label:'其他（请补充一句）',description:'自由主题，仍按关系优先流程设计'}];
   return {
     note:'Ask at most three bounded questions before authoring; skip anything the user already answered and proceed with these recommended defaults when the user accepts them.',
     questions:[
-      {id:'domain',header:'领域',question:'这个 GIF 属于哪个主题？',multiSelect:false,options:[{label:`${domain}（按 brief 推荐）`,description:'来自当前 brief 的关键词推断，可改选'},{label:'深度学习',description:'张量、注意力、训练机制'},{label:'统计学习',description:'抽样、估计、不确定性'},{label:'分布式系统',description:'shuffle、复制、故障'},{label:'系统设计',description:'缓存、队列、请求路径'},{label:'其他（请补充一句）',description:'自由主题，仍按关系优先流程设计'}]},
+      {id:'domain',header:'领域',question:'这个 GIF 属于哪个主题？',multiSelect:false,options:domainOptions},
       {id:'representation',header:'表现形式',question:'先做哪种输出？',multiSelect:false,options:[representation,...alternatives]},
       {id:'format',header:'时长与配色',question:'GIF 时长和配色选哪个？',multiSelect:false,options:[{label:'8 秒 · 浅色（推荐）',description:'5–10s 叙事，末停 1–2s'},{label:'5 秒 · 浅色',description:'更短的单一关系'},{label:'10 秒 · 浅色',description:'两段式，但仅一个关系'},{label:'8 秒 · 深色',description:'深色画布，同长度'}]},
       {id:'evidence',header:'证据来源',question:'内容依据从哪来？',multiSelect:false,options:[{label:'用户提供的原文或数据（推荐）',description:'引用精确片段与数值，不补造数字'},{label:'公开资料（需标注来源）',description:'给出链接与引用，区分测量/计算/示意'},{label:'纯合成示意',description:'明确标注 synthetic，不伪装真实结果'}]},
